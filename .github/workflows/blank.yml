@@ -1,0 +1,1814 @@
+#R-Packages
+update.packages()
+
+install.packages("haven")
+library (haven)
+install.packages("car")
+library(car)
+install.packages("sjlabelled")
+library("sjlabelled")
+
+citation()
+
+#Datei auslesen
+data_B20 <- read_sav("C:/Users/aleimberger/OneDrive - Stiftung Deutsche Depressionshilfe/Desktop/Barometer 2020.sav", encoding="latin1")
+#Struktur und Inhalt anzeigen
+##str(data_B20)
+##print(data_B20)
+
+options(max.print = 10000)
+
+# Soziodemografische Daten
+print(data_B20$GRUPPE)
+table(data_B20$GRUPPE)
+
+print(data_B20$Geschlecht)
+table(data_B20$Geschlecht)
+
+print(data_B20$Alter)
+table(data_B20$Alter)
+
+print(data_B20$Schule) # print (data_B20$v_539)
+table(data_B20$Schule) # table (data_B20$v_539)
+
+print(data_B20$Bundesland)
+table(data_B20$Bundesland)
+
+# Umkodieren der Variablen Wissen_01 Wie gut fühlen Sie sich über das Thema Depression informiert?
+B20.Wissen_01_umkodiert <- recode(data_B20$Wissen_01, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Wissen_01_umkodiert <- set_labels(B20.Wissen_01_umkodiert, labels =c("gut informiert"=1, "nicht gut informiert"=0, "Fehlend"=NA))
+print(B20.Wissen_01_umkodiert)
+
+# Umkodieren der 52 selektierten Variablen
+B20.Wissen_02_umkodiert <- recode(data_B20$Wissen_02, "997=NA; 998=NA; 999=NA; 0:10=0; 11:25=1; 26:40=0; 41:100=0")
+B20.Wissen_02_umkodiert <- set_labels(B20.Wissen_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Wissen_02_umkodiert)
+
+B20.Wissen_06_umkodiert <-  recode(data_B20$Wissen_06, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1; 5=0")
+B20.Wissen_06_umkodiert <- set_labels(B20.Wissen_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Wissen_06_umkodiert)
+
+B20.Merkmal_01_umkodiert <- recode(data_B20$Merkmal_01, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0") 
+B20.Merkmal_01_umkodiert <- set_labels(B20.Merkmal_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_01_umkodiert)
+
+B20.Merkmal_02_umkodiert <- recode(data_B20$Merkmal_02, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Merkmal_02_umkodiert <- set_labels(B20.Merkmal_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_02_umkodiert)
+
+B20.Merkmal_03_umkodiert <- recode(data_B20$Merkmal_03, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0") 
+B20.Merkmal_03_umkodiert <- set_labels(B20.Merkmal_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_03_umkodiert)
+
+B20.Merkmal_04_umkodiert <- recode(data_B20$Merkmal_04, "997=NA; 998=NA; 999=NA; 3=1; 4=1; 1=0; 2=0")
+B20.Merkmal_04_umkodiert <- set_labels(B20.Merkmal_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_04_umkodiert)
+
+B20.Merkmal_05_umkodiert <- recode(data_B20$Merkmal_05, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Merkmal_05_umkodiert <- set_labels(B20.Merkmal_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_05_umkodiert)
+
+B20.Merkmal_06_umkodiert <- recode(data_B20$Merkmal_06, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Merkmal_06_umkodiert <- set_labels(B20.Merkmal_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_06_umkodiert)
+
+B20.Merkmal_07_umkodiert <- recode(data_B20$Merkmal_07, "997=NA; 998=NA; 999=NA; 3=1; 4=1; 1=0; 2=0")
+B20.Merkmal_07_umkodiert <- set_labels(B20.Merkmal_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_07_umkodiert)
+
+#Merkmal_08 ausgeschlossen
+
+B20.Merkmal_09_umkodiert <- recode(data_B20$Merkmal_09, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Merkmal_09_umkodiert <- set_labels(B20.Merkmal_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_09_umkodiert)
+
+B20.Merkmal_10_umkodiert <- recode(data_B20$Merkmal_10, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Merkmal_10_umkodiert <- set_labels(B20.Merkmal_10_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_10_umkodiert)
+
+B20.Merkmal_11_umkodiert <- recode(data_B20$Merkmal_11, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Merkmal_11_umkodiert <- set_labels(B20.Merkmal_11_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Merkmal_11_umkodiert)
+
+#Ursachen_01 ausgeschlossen
+
+B20.Ursachen_03_umkodiert <- recode(data_B20$Ursachen_03, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Ursachen_03_umkodiert <- set_labels(B20.Ursachen_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_03_umkodiert)
+
+B20.Ursachen_04_umkodiert <- recode(data_B20$Ursachen_04, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_04_umkodiert <- set_labels(B20.Ursachen_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_04_umkodiert)
+
+B20.Ursachen_05_umkodiert <- recode(data_B20$Ursachen_05, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Ursachen_05_umkodiert <- set_labels(B20.Ursachen_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_05_umkodiert)
+
+B20.Ursachen_06_umkodiert <- recode(data_B20$Ursachen_06, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Ursachen_06_umkodiert <- set_labels(B20.Ursachen_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_06_umkodiert)
+
+B20.Ursachen_07_umkodiert <- recode(data_B20$Ursachen_07, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Ursachen_07_umkodiert <- set_labels(B20.Ursachen_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_07_umkodiert)
+
+B20.Ursachen_08_umkodiert <- recode(data_B20$Ursachen_08, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_08_umkodiert <- set_labels(B20.Ursachen_08_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_08_umkodiert)
+
+B20.Ursachen_09_umkodiert <- recode(data_B20$Ursachen_09, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Ursachen_09_umkodiert <- set_labels(B20.Ursachen_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_09_umkodiert)
+
+#Ursachen_10 existiert nicht
+
+B20.Ursachen_11_umkodiert <- recode(data_B20$Ursachen_11, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_11_umkodiert <- set_labels(B20.Ursachen_11_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_11_umkodiert)
+
+B20.Ursachen_12_umkodiert <- recode(data_B20$Ursachen_12, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_12_umkodiert <- set_labels(B20.Ursachen_12_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_12_umkodiert)
+
+B20.Ursachen_13_umkodiert <- recode(data_B20$Ursachen_13, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_13_umkodiert <- set_labels(B20.Ursachen_13_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_13_umkodiert)
+
+B20.Ursachen_14_umkodiert <- recode(data_B20$Ursachen_14, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_14_umkodiert <- set_labels(B20.Ursachen_14_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_14_umkodiert)
+
+B20.Ursachen_15_umkodiert <- recode(data_B20$Ursachen_15, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_15_umkodiert <- set_labels(B20.Ursachen_15_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_15_umkodiert)
+
+B20.Ursachen_16_umkodiert <- recode(data_B20$Ursachen_16, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B20.Ursachen_16_umkodiert <- set_labels(B20.Ursachen_16_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Ursachen_16_umkodiert)
+
+B20.Mittel_01_umkodiert <- recode(data_B20$Mittel_01, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_01_umkodiert <- set_labels(B20.Mittel_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_01_umkodiert)
+
+B20.Mittel_02_umkodiert <- recode(data_B20$Mittel_02, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Mittel_02_umkodiert <- set_labels(B20.Mittel_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_02_umkodiert)
+
+B20.Mittel_03_umkodiert <- recode(data_B20$Mittel_03, "997=NA; 998=998; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Mittel_03_umkodiert <- set_labels(B20.Mittel_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_03_umkodiert)
+
+B20.Mittel_04_umkodiert <- recode(data_B20$Mittel_04, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_04_umkodiert <- set_labels(B20.Mittel_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_04_umkodiert)
+
+B20.Mittel_05_umkodiert <- recode(data_B20$Mittel_05, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_05_umkodiert <- set_labels(B20.Mittel_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_05_umkodiert)
+
+B20.Mittel_06_umkodiert <- recode(data_B20$Mittel_06, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Mittel_06_umkodiert <- set_labels(B20.Mittel_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_06_umkodiert)
+
+B20.Mittel_07_umkodiert <- recode(data_B20$Mittel_07, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Mittel_07_umkodiert <- set_labels(B20.Mittel_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_07_umkodiert)
+
+B20.Mittel_08_umkodiert <- recode(data_B20$Mittel_08, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_08_umkodiert <- set_labels(B20.Mittel_08_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_08_umkodiert)
+
+B20.Mittel_09_umkodiert <- recode(data_B20$Mittel_09, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_09_umkodiert <- set_labels(B20.Mittel_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_09_umkodiert)
+
+B20.Mittel_10_umkodiert <- recode(data_B20$Mittel_10, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_10_umkodiert <- set_labels(B20.Mittel_10_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_10_umkodiert)
+
+B20.Mittel_11_umkodiert <- recode(data_B20$Mittel_11, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_11_umkodiert <- set_labels(B20.Mittel_11_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_11_umkodiert)
+
+B20.Mittel_12_umkodiert <- recode(data_B20$Mittel_12, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Mittel_12_umkodiert <- set_labels(B20.Mittel_12_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_12_umkodiert)
+
+B20.Mittel_13_umkodiert <- recode(data_B20$Mittel_13, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B20.Mittel_13_umkodiert <- set_labels(B20.Mittel_13_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_13_umkodiert)
+
+B20.Mittel_14_umkodiert <- recode(data_B20$Mittel_14, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_14_umkodiert <- set_labels(B20.Mittel_14_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_14_umkodiert)
+
+B20.Mittel_15_umkodiert <- recode(data_B20$Mittel_15, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B20.Mittel_15_umkodiert <- set_labels(B20.Mittel_15_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Mittel_15_umkodiert)
+
+B20.Meinung_04_umkodiert <- recode(data_B20$Meinung_04, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B20.Meinung_04_umkodiert <- set_labels(B20.Meinung_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Meinung_04_umkodiert)
+
+B20.Meinung_01_umkodiert <- recode(data_B20$Meinung_01, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B20.Meinung_01_umkodiert <- set_labels(B20.Meinung_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Meinung_01_umkodiert)
+
+B20.Meinung_02_umkodiert <- recode(data_B20$Meinung_02, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B20.Meinung_02_umkodiert <- set_labels(B20.Meinung_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Meinung_02_umkodiert)
+
+B20.Meinung_03_umkodiert <- recode(data_B20$Meinung_03, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B20.Meinung_03_umkodiert <- set_labels(B20.Meinung_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Meinung_03_umkodiert)
+
+B20.Symptom_01_umkodiert <- recode(data_B20$Symptom_01, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B20.Symptom_01_umkodiert <- set_labels(B20.Symptom_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_01_umkodiert)
+
+B20.Symptom_02_umkodiert <- recode(data_B20$Symptom_02, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B20.Symptom_02_umkodiert <- set_labels(B20.Symptom_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_02_umkodiert)
+
+#Symptom_03 ausgeschlossen
+
+B20.Symptom_04_umkodiert <- recode(data_B20$Symptom_04, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B20.Symptom_04_umkodiert <- set_labels(B20.Symptom_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_04_umkodiert)
+
+B20.Symptom_05_umkodiert <- recode(data_B20$Symptom_05, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B20.Symptom_05_umkodiert <- set_labels(B20.Symptom_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_05_umkodiert)
+
+B20.Symptom_06_umkodiert <- recode(data_B20$Symptom_06, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B20.Symptom_06_umkodiert <- set_labels(B20.Symptom_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_06_umkodiert)
+
+B20.Symptom_07_umkodiert <- recode(data_B20$Symptom_07, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B20.Symptom_07_umkodiert <- set_labels(B20.Symptom_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_07_umkodiert)
+
+B20.Symptom_08_umkodiert <- recode(data_B20$Symptom_08, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B20.Symptom_08_umkodiert <- set_labels(B20.Symptom_08_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_08_umkodiert)
+
+B20.Symptom_09_umkodiert <- recode(data_B20$Symptom_09, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B20.Symptom_09_umkodiert <- set_labels(B20.Symptom_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B20.Symptom_09_umkodiert)
+
+# VARIABLE: GRUPPE (Betroffener mit Diagnose, Betroffener ohne Diagnose, Angehöriger, Behandler, kein Kontakt)
+B20.GRUPPE <- data_B20$GRUPPE
+print(B20.GRUPPE)
+table(B20.GRUPPE)
+
+
+#Exploratorische Faktoreanalyse
+##remove.packages("dplyr")
+
+##Behebung der Fehlermeldung: package or namespace load failed for ‘dplyr’
+#remove.packages("rlang")
+#remove.packages("dplyr")
+#install.packages("rlang")
+#install.packages("dplyr")
+#library(rlang)
+library(dplyr)
+
+
+nrow(data_B20)
+
+DL_B20 <- data.frame(
+  B20.Wissen_02_umkodiert,
+  B20.Wissen_06_umkodiert,
+  B20.Merkmal_01_umkodiert,
+  B20.Merkmal_02_umkodiert,
+  B20.Merkmal_03_umkodiert,
+  B20.Merkmal_04_umkodiert,
+  B20.Merkmal_05_umkodiert,
+  B20.Merkmal_06_umkodiert,
+  B20.Merkmal_07_umkodiert,
+  B20.Merkmal_09_umkodiert,
+  B20.Merkmal_10_umkodiert,
+  B20.Merkmal_11_umkodiert,
+  B20.Ursachen_03_umkodiert,
+  B20.Ursachen_04_umkodiert,
+  B20.Ursachen_05_umkodiert,
+  B20.Ursachen_06_umkodiert,
+  B20.Ursachen_07_umkodiert,
+  B20.Ursachen_08_umkodiert,
+  B20.Ursachen_09_umkodiert,
+  B20.Ursachen_11_umkodiert,
+  B20.Ursachen_12_umkodiert,
+  B20.Ursachen_13_umkodiert,
+  B20.Ursachen_14_umkodiert,
+  B20.Ursachen_15_umkodiert,
+  B20.Ursachen_16_umkodiert,
+  B20.Mittel_01_umkodiert,
+  B20.Mittel_02_umkodiert,
+  B20.Mittel_03_umkodiert,
+  B20.Mittel_04_umkodiert,
+  B20.Mittel_05_umkodiert,
+  B20.Mittel_06_umkodiert,
+  B20.Mittel_07_umkodiert,
+  B20.Mittel_08_umkodiert,
+  B20.Mittel_09_umkodiert,
+  B20.Mittel_10_umkodiert,
+  B20.Mittel_11_umkodiert,
+  B20.Mittel_12_umkodiert,
+  B20.Mittel_13_umkodiert,
+  B20.Mittel_14_umkodiert,
+  B20.Mittel_15_umkodiert,
+  B20.Meinung_04_umkodiert,
+  B20.Meinung_01_umkodiert,
+  B20.Meinung_02_umkodiert,
+  B20.Meinung_03_umkodiert,
+  B20.Symptom_01_umkodiert,
+  B20.Symptom_02_umkodiert,
+  B20.Symptom_04_umkodiert,
+  B20.Symptom_05_umkodiert,
+  B20.Symptom_06_umkodiert,
+  B20.Symptom_07_umkodiert,
+  B20.Symptom_08_umkodiert,
+  B20.Symptom_09_umkodiert
+)
+print(DL_B20)
+
+#Packages
+install.packages("psych")
+library("psych")
+install.packages("GPArotation")
+library("GPArotation")
+install.packages("paran")
+#library(relimp, pos = 4) Vermutlich nicht notwendig
+#library(paran) Vermutlich nicht notwendig
+
+# Werte des Dataframes angeben (MW, SD, Median, Min, Max, Schiefe, Kurtosis)
+psych::describe(DL_B20)
+
+#New Dataframe: Cases without missings (Creates a new dataframe with all cases without NA)
+DL_B20_X <- na.omit(DL_B20) # Function na.omit thorws out all cases with NA
+print(DL_B20_X)
+nrow(DL_B20_X) # Row number of the new data frame
+
+
+# Hauptachsenanalyse (Principal Axes Factoring; Option fm="pa")
+
+# Parallel Analysis: Calculation+Graph
+fa.parallel(DL_B20_X, fa="fa")
+
+# Correlation matrix
+COR <- cor(DL_B20_X)
+print(COR)
+
+# Eigenvalues: Calculation
+ev20 <- eigen(cor(DL_B20_X)) # get eigenvalues
+ev20$values # only eigenvalues
+#print(ev) # complete output
+
+# Eigenvalues: Scree plot
+scree(DL_B20_X, factors = FALSE)
+
+# Kaiser–Meyer–Olkin test (KMO)
+KMO(DL_B20_X) # psych-package
+x <- KMO(DL_B20_X)$ImCov
+print(x)
+
+# Barlett-Test
+cortest.bartlett(DL_B20_X)
+ev <- eigen(cor(DL_B20_X)) # get eigenvalues
+print(ev)
+
+library(GPArotation)
+
+# Factor analysis: Calculation method 1: According to Eigenvaules 14 factors (all factor loadings are displayed)
+data_spss.pa.oblimin <- fa(DL_B20_X,
+                          nfactors= 14,
+                          SMC=TRUE,
+                          fm="pa",
+                          rotate="oblimin"
+)
+
+print(data_spss.pa.oblimin)
+
+# Factor analysis: Calculation method 1: According to Parallel analysis 12 factors (all factor loadings are displayed)
+PA_data_spss.pa.oblimin <- fa(DL_B20_X,
+                           nfactors= 12,
+                           SMC=TRUE,
+                           fm="pa",
+                           rotate="oblimin"
+)
+
+print(PA_data_spss.pa.oblimin)
+
+# Details des Outputs anzeigen (Versuch die Tabelle aus dem Output zu kopieren)
+capture.output(data_spss.pa.oblimin, file = NULL, append = FALSE,
+               type = c("output"), split = FALSE)
+
+
+# Factor analysis: Calculation method 2: Eigenvalues (only highest factor loadings are displayed)
+DL_B20_FA <- fa(DL_B20_X, nfactors = 14, rotate = "oblimin", fm = "pa") ### Warning: convergence not obtained in GPFoblq. 1000 iterations used.
+print(DL_B20_FA)
+print(DL_B20_FA$loadings)
+#DF14 <- as.data.frame(fa_14$loadings)
+
+# Factor analysis: Calculation method 2: Parallel analysis (only highest factor loadings are displayed)
+DL_B20_FA <- fa(DL_B20_X, nfactors = 12, rotate = "oblimin", fm = "pa")
+print(DL_B20_FA)
+print(DL_B20_FA$loadings)
+#DF14 <- as.data.frame(fa_14$loadings)
+
+
+# Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha (DL_B20_X) [[" item . stats " ]][[ " mean "]]/3*100
+
+# Formatierung des data frames
+##table <- data.frame(Itemschwierigkeit)
+## rownames ( table ) <- colnames ( data )
+##table <- round (table , digits = 3)
+
+
+rowSums(DL_B20_X)
+DL_B20_X$score <- rowSums(DL_B20_X)
+DL_B20_X
+
+# Itemschwierigkeit für alle Items
+##Itemschwierigkeit <- colMeans(DL_B20_X)
+##print(Itemschwierigkeit)
+##Itemschwierigkeit für ein einzelnes Item (ohne NA)
+##mean(DL_B20_X$B20.Ursachen_04_umkodiert)
+##Itemschwierigkeit für ein einzelnes Item (mit NA)
+##mean(DL_B20$B20.Ursachen_04_umkodiert)
+
+# Score: Korrelation zwischen jedem Item und dem Testscore. Dieser Kennwert ist die (unkorrigierte) Trennschärfe der Items.
+##Trennschaerfe <- round(cor(DL_B20_X), 2)
+##print(Trennschaerfe)
+
+remove.packages("rlang")
+install.packages("rlang")
+library("rlang")
+
+remove.packages("dplyr")
+install.packages("dplyr")
+install.packages("psych")
+library(psych)
+
+
+
+###BERECHNUNG DER ITEMSCHWIERIGKEITEN UND TRENNSCHÄRFEN DER EINZELNEN FAKTOREN###
+# Faktor 1
+Faktor1 <- data.frame (DL_B20_X$B20.Ursachen_04_umkodiert, DL_B20_X$B20.Ursachen_08_umkodiert, DL_B20_X$B20.Ursachen_11_umkodiert, DL_B20_X$B20.Ursachen_12_umkodiert, DL_B20_X$B20.Ursachen_13_umkodiert, DL_B20_X$B20.Ursachen_14_umkodiert, DL_B20_X$B20.Ursachen_15_umkodiert, DL_B20_X$B20.Ursachen_16_umkodiert)
+print(Faktor1)
+# (0) Cronbachs alpha
+alpha(Faktor1)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor1 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor1 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor1) <- colnames ( Faktor1 )
+tableIS_Faktor1 <- round (tableIS_Faktor1, digits = 5)
+print(tableIS_Faktor1)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor1) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor1 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor1) <- colnames ( Faktor1 )
+tableTS_Faktor1 <- round (tableTS_Faktor1 , digits = 5)
+print(tableTS_Faktor1)
+
+# Faktor 2
+Faktor2 <- data.frame (DL_B20_X$B20.Symptom_02_umkodiert, DL_B20_X$B20.Symptom_04_umkodiert, DL_B20_X$B20.Symptom_05_umkodiert, DL_B20_X$B20.Symptom_08_umkodiert, DL_B20_X$B20.Symptom_09_umkodiert)
+print(Faktor2)
+# (0) Cronbachs alpha
+alpha(Faktor2)
+# (1)Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor2 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor2 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor2) <- colnames ( Faktor2 )
+tableIS_Faktor2 <- round (tableIS_Faktor2, digits = 5)
+print(tableIS_Faktor2)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor2) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor2 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor2) <- colnames ( Faktor2 )
+tableTS_Faktor2 <- round (tableTS_Faktor2 , digits = 5)
+print(tableTS_Faktor2)
+
+# Faktor 2.1
+Faktor2.1 <- data.frame (DL_B20_X$B20.Symptom_02_umkodiert, DL_B20_X$B20.Symptom_05_umkodiert, DL_B20_X$B20.Symptom_08_umkodiert, DL_B20_X$B20.Symptom_09_umkodiert)
+print(Faktor2.1)
+# (0) Cronbachs alpha
+alpha(Faktor2.1)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor2.1) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor2.1 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor2.1) <- colnames ( Faktor2.1 )
+tableTS_Faktor2.1 <- round (tableTS_Faktor2.1 , digits = 5)
+print(tableTS_Faktor2.1)
+
+# Faktor 3
+Faktor3 <- data.frame (DL_B20_X$B20.Mittel_09_umkodiert, DL_B20_X$B20.Meinung_04_umkodiert, DL_B20_X$B20.Meinung_03_umkodiert)
+print(Faktor3)
+# (0) Cronbachs alpha
+alpha(Faktor3)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor3 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor3 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor3) <- colnames ( Faktor3 )
+tableIS_Faktor3 <- round (tableIS_Faktor3, digits = 5)
+print(tableIS_Faktor3)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor3) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor3 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor3) <- colnames ( Faktor3 )
+tableTS_Faktor3 <- round (tableTS_Faktor3 , digits = 5)
+print(tableTS_Faktor3)
+
+# Faktor 4
+Faktor4 <- data.frame (DL_B20_X$B20.Mittel_08_umkodiert, DL_B20_X$B20.Mittel_10_umkodiert, DL_B20_X$B20.Mittel_12_umkodiert, DL_B20_X$B20.Mittel_14_umkodiert, DL_B20_X$B20.Mittel_15_umkodiert)
+print(Faktor4)
+# (0) Cronbachs alpha
+alpha(Faktor4)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor4 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor4 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor4) <- colnames ( Faktor4 )
+tableIS_Faktor4 <- round (tableIS_Faktor4, digits = 5)
+print(tableIS_Faktor4)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor4) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor4 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor4) <- colnames ( Faktor4 )
+tableTS_Faktor4 <- round (tableTS_Faktor4 , digits = 5)
+print(tableTS_Faktor4)
+
+# Faktor 4.1
+Faktor4.1 <- data.frame (DL_B20_X$B20.Mittel_08_umkodiert, DL_B20_X$B20.Mittel_10_umkodiert, DL_B20_X$B20.Mittel_14_umkodiert, DL_B20_X$B20.Mittel_15_umkodiert)
+print(Faktor4.1)
+# (0) Cronbachs alpha
+alpha(Faktor4.1)
+# (1) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor4.1) [["item.stats"]][["r.drop"]])
+# (2) Formatierung des data frames
+tableTS_Faktor4.1 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor4.1) <- colnames ( Faktor4.1 )
+tableTS_Faktor4.1 <- round (tableTS_Faktor4.1 , digits = 5)
+print(tableTS_Faktor4.1)
+
+# Faktor 4.2
+Faktor4.2 <- data.frame (DL_B20_X$B20.Mittel_08_umkodiert, DL_B20_X$B20.Mittel_14_umkodiert, DL_B20_X$B20.Mittel_15_umkodiert)
+print(Faktor4.2)
+# (0) Cronbachs alpha
+alpha(Faktor4.2)
+# (1) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor4.2) [["item.stats"]][["r.drop"]])
+# (2) Formatierung des data frames
+tableTS_Faktor4.2 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor4.2) <- colnames ( Faktor4.2 )
+tableTS_Faktor4.2 <- round (tableTS_Faktor4.2 , digits = 5)
+print(tableTS_Faktor4.2)
+
+# Faktor 5
+Faktor5 <- data.frame (DL_B20_X$B20.Ursachen_09_umkodiert, DL_B20_X$B20.Mittel_03_umkodiert, DL_B20_X$B20.Mittel_06_umkodiert, DL_B20_X$B20.Mittel_07_umkodiert, DL_B20_X$B20.Merkmal_04_umkodiert)
+print(Faktor5)
+# (0) Cronbachs alpha
+alpha(Faktor5)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor5 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor5 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor5) <- colnames ( Faktor5 )
+tableIS_Faktor5 <- round (tableIS_Faktor5, digits = 5)
+print(tableIS_Faktor5)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor5) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor5 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor5) <- colnames ( Faktor5 )
+tableTS_Faktor5 <- round (tableTS_Faktor5 , digits = 5)
+print(tableTS_Faktor5)
+
+# Faktor 5.1
+Faktor5.1 <- data.frame (DL_B20_X$B20.Ursachen_09_umkodiert, DL_B20_X$B20.Mittel_03_umkodiert, DL_B20_X$B20.Mittel_06_umkodiert, DL_B20_X$B20.Mittel_07_umkodiert)
+print(Faktor5)
+# (0) Cronbach alpha
+alpha (Faktor5.1)
+# (1) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor5.1) [["item.stats"]][["r.drop"]])
+# (2) Formatierung des data frames
+tableTS_Faktor5.1 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor5.1) <- colnames ( Faktor5.1 )
+tableTS_Faktor5.1 <- round (tableTS_Faktor5.1 , digits = 5)
+print(tableTS_Faktor5.1)
+
+# Faktor 5.2
+Faktor5.2 <- data.frame (DL_B20_X$B20.Ursachen_09_umkodiert, DL_B20_X$B20.Mittel_06_umkodiert, DL_B20_X$B20.Mittel_07_umkodiert)
+print(Faktor5.2)
+# (0) Cronbachs alpha
+alpha(Faktor5.2)
+# (1) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor5.2) [["item.stats"]][["r.drop"]])
+# (2) Formatierung des data frames
+tableTS_Faktor5.2 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor5.2) <- colnames ( Faktor5.2 )
+tableTS_Faktor5.2 <- round (tableTS_Faktor5.2 , digits = 5)
+print(tableTS_Faktor5.2)
+
+# Faktor 6
+Faktor6 <- data.frame (DL_B20_X$B20.Mittel_04_umkodiert, DL_B20_X$B20.Mittel_05_umkodiert)
+print(Faktor6)
+# (0) Cronbachs alpha
+alpha (Faktor6)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor6 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor6 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor6) <- colnames ( Faktor6 )
+tableIS_Faktor6 <- round (tableIS_Faktor6, digits = 5)
+print(tableIS_Faktor6)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor6) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor6 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor6) <- colnames ( Faktor6 )
+tableTS_Faktor6 <- round (tableTS_Faktor6 , digits = 5)
+print(tableTS_Faktor6)
+
+# Faktor 7
+Faktor7 <- data.frame (DL_B20_X$B20.Ursachen_06_umkodiert, DL_B20_X$B20.Ursachen_07_umkodiert)
+print(Faktor7)
+# (0) Cronbachs alpha
+alpha(Faktor7)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor7 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor7 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor7) <- colnames ( Faktor7 )
+tableIS_Faktor7 <- round (tableIS_Faktor7, digits = 5)
+print(tableIS_Faktor7)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor7) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor7 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor7) <- colnames ( Faktor7 )
+tableTS_Faktor7 <- round (tableTS_Faktor7 , digits = 5)
+print(tableTS_Faktor7)
+
+# Faktor 8
+Faktor8 <- data.frame (DL_B20_X$B20.Merkmal_07_umkodiert, DL_B20_X$B20.Ursachen_03_umkodiert, DL_B20_X$B20.Ursachen_05_umkodiert, DL_B20_X$B20.Merkmal_06_umkodiert)
+print(Faktor8)
+# (0) Cronbachs alpha
+alpha(Faktor8)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor8 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor8 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor8) <- colnames ( Faktor8 )
+tableIS_Faktor8 <- round (tableIS_Faktor8, digits = 5)
+print(tableIS_Faktor8)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor8) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor8 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor8) <- colnames ( Faktor8 )
+tableTS_Faktor8 <- round (tableTS_Faktor8 , digits = 5)
+print(tableTS_Faktor8)
+
+# Faktor 8.1
+Faktor8.1 <- data.frame (DL_B20_X$B20.Merkmal_07_umkodiert, DL_B20_X$B20.Ursachen_03_umkodiert, DL_B20_X$B20.Merkmal_06_umkodiert)
+print(Faktor8.1)
+# (0) Cronbachs alpha
+alpha(Faktor8.1)
+# (1) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor8.1) [["item.stats"]][["r.drop"]])
+# (2) Formatierung des data frames
+tableTS_Faktor8.1 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor8.1) <- colnames ( Faktor8.1 )
+tableTS_Faktor8.1 <- round (tableTS_Faktor8.1 , digits = 5)
+print(tableTS_Faktor8.1)
+
+# Faktor 9
+Faktor9 <- data.frame (DL_B20_X$B20.Mittel_01_umkodiert, DL_B20_X$B20.Mittel_02_umkodiert, DL_B20_X$B20.Mittel_11_umkodiert, DL_B20_X$B20.Mittel_13_umkodiert)
+print(Faktor9)
+# (0) Cronbachs alpha
+alpha(Faktor9)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor9 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor9 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor9) <- colnames ( Faktor9 )
+tableIS_Faktor9 <- round (tableIS_Faktor9, digits = 5)
+print(tableIS_Faktor9)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor9) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor9 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor9) <- colnames ( Faktor9 )
+tableTS_Faktor9 <- round (tableTS_Faktor9 , digits = 5)
+print(tableTS_Faktor9)
+
+# Faktor 9.1
+Faktor9.1 <- data.frame (DL_B20_X$B20.Mittel_01_umkodiert, DL_B20_X$B20.Mittel_11_umkodiert)
+print(Faktor9.1)
+# (0) Cronbachs alpha
+alpha(Faktor9.1)
+# (1) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor9.1) [["item.stats"]][["r.drop"]])
+# (2) Formatierung des data frames
+tableTS_Faktor9.1 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor9.1) <- colnames ( Faktor9.1 )
+tableTS_Faktor9.1 <- round (tableTS_Faktor9.1 , digits = 5)
+print(tableTS_Faktor9.1)
+
+# Faktor 9.2
+Faktor9.2 <- data.frame (DL_B20_X$B20.Mittel_02_umkodiert, DL_B20_X$B20.Mittel_13_umkodiert)
+print(Faktor9.2)
+# (0) Cronbachs alpha
+alpha(Faktor9.2)
+# (1) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor9.2) [["item.stats"]][["r.drop"]])
+# (2) Formatierung des data frames
+tableTS_Faktor9.2 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor9.2) <- colnames ( Faktor9.2 )
+tableTS_Faktor9.2 <- round (tableTS_Faktor9.2 , digits = 5)
+print(tableTS_Faktor9.2)
+
+# Faktor 10
+Faktor10 <- data.frame (DL_B20_X$B20.Symptom_01_umkodiert, DL_B20_X$B20.Symptom_06_umkodiert, DL_B20_X$B20.Symptom_07_umkodiert)
+print(Faktor10)
+# (0) Cronbachs alpha
+alpha(Faktor10)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor10 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor10 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor10) <- colnames ( Faktor10 )
+tableIS_Faktor10 <- round (tableIS_Faktor10, digits = 5)
+print(tableIS_Faktor10)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor10) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor10 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor10) <- colnames ( Faktor10 )
+tableTS_Faktor10 <- round (tableTS_Faktor10 , digits = 5)
+print(tableTS_Faktor10)
+
+# Faktor 11
+Faktor11 <- data.frame (DL_B20_X$B20.Merkmal_02_umkodiert, DL_B20_X$B20.Merkmal_03_umkodiert, DL_B20_X$B20.Merkmal_05_umkodiert, DL_B20_X$B20.Merkmal_01_umkodiert)
+print(Faktor11)
+# (0) Cronbachs alpha
+alpha(Faktor11)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor11 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor11 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor11) <- colnames ( Faktor11 )
+tableIS_Faktor11 <- round (tableIS_Faktor11, digits = 5)
+print(tableIS_Faktor11)
+print(Itemschwierigkeit)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor11) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor11 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor11) <- colnames ( Faktor11 )
+tableTS_Faktor11 <- round (tableTS_Faktor11 , digits = 5)
+print(tableTS_Faktor11)
+
+# Faktor 12
+Faktor12 <- data.frame (DL_B20_X$B20.Meinung_01_umkodiert, DL_B20_X$B20.Meinung_02_umkodiert)
+print(Faktor12)
+# (0) Cronbachs alpha
+alpha(Faktor12)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor12 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor12 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor12) <- colnames ( Faktor12 )
+tableIS_Faktor12 <- round (tableIS_Faktor12, digits = 5)
+print(tableIS_Faktor12)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor12) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor12 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor12) <- colnames ( Faktor12 )
+tableTS_Faktor12 <- round (tableTS_Faktor12 , digits = 5)
+print(tableTS_Faktor12)
+
+# Faktor 13
+Faktor13 <- data.frame (DL_B20_X$B20.Merkmal_09_umkodiert, DL_B20_X$B20.Merkmal_10_umkodiert, DL_B20_X$B20.Wissen_02_umkodiert, DL_B20_X$B20.Wissen_06_umkodiert)
+print(Faktor13)
+# (0) Cronbachs alpha
+alpha(Faktor13)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor13 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor13 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor13) <- colnames ( Faktor13 )
+tableIS_Faktor13 <- round (tableIS_Faktor13, digits = 5)
+print(tableIS_Faktor13)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor13) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor13 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor13) <- colnames ( Faktor13 )
+tableTS_Faktor13 <- round (tableTS_Faktor13 , digits = 5)
+print(tableTS_Faktor13)
+
+# Faktor 14
+Faktor14 <- data.frame (DL_B20_X$B20.Merkmal_04_umkodiert, DL_B20_X$B20.Merkmal_11_umkodiert)
+print(Faktor14)
+# (0) Cronbachs alpha
+alpha(Faktor14)
+# (1) Berechnung Itemschwierigkeit
+Itemschwierigkeit = psych :: alpha ( Faktor14 ) [["item.stats" ]][[ "mean"]]/1
+# (2) Formatierung des data frames
+tableIS_Faktor14 <- data.frame ( Itemschwierigkeit )
+rownames (tableIS_Faktor14) <- colnames ( Faktor14 )
+tableIS_Faktor14 <- round (tableIS_Faktor14, digits = 5)
+print(tableIS_Faktor14)
+# (3) Berechnung Itemtrennschaerfe ( Korrigierte Item Skalen Korrelation )
+Itemtrennschaerfe <- data.frame ('Itemtrennschaerfe' = alpha (Faktor14) [["item.stats"]][["r.drop"]])
+# (4) Formatierung des data frames
+tableTS_Faktor14 <- data.frame ( Itemtrennschaerfe )
+rownames (tableTS_Faktor14) <- colnames ( Faktor14 )
+tableTS_Faktor14 <- round (tableTS_Faktor14 , digits = 5)
+print(tableTS_Faktor14)
+
+# Länge des Dataframes
+nrow(DL_B20_X)
+length(DL_B20_X[,1])
+
+
+##Diagramm: Factor loadings
+fa.diagram(DL_B20_FA)
+
+#install.packages("psychometric")
+
+DL_B20_14 <-       data.frame(B20.Ursachen_15_umkodiert,
+                            B20.Symptom_05_umkodiert,
+                            B20.Meinung_04_umkodiert,
+                            B20.Mittel_15_umkodiert,
+                            B20.Mittel_06_umkodiert,
+                            B20.Mittel_05_umkodiert,
+                            B20.Ursachen_07_umkodiert,
+                            B20.Merkmal_07_umkodiert,
+                            B20.Mittel_01_umkodiert,
+                            B20.Symptom_07_umkodiert,
+                            B20.Merkmal_05_umkodiert,
+                            B20.Meinung_01_umkodiert,
+                            B20.Merkmal_10_umkodiert,
+                            B20.Merkmal_11_umkodiert)
+
+print(DL_B20_14)
+
+
+DL_B20_14_X <- na.omit(DL_B20_14)
+print(DL_B20_14_X)
+ 
+
+# Eigenvalues: Calculation
+ev20_14 <- eigen(cor(DL_B20_14_X)) # get eigenvalues
+ev20_14$values # only eigenvalues
+#print(ev) # complete output
+
+# Factor analysis: Calculation method 1: According to Eigenvaules 14 factors (all factor loadings are displayed)
+data_spss.pa.oblimin <- fa(DL_B20_14_X,
+                           nfactors= 5,
+                           SMC=TRUE,
+                           fm="pa",
+                           rotate="oblimin"
+)
+
+print(data_spss.pa.oblimin)
+
+fa.parallel(DL_B20_14_X, fa="fa")
+alpha(DL_B20_14_X)
+
+# Faktor 8
+#Faktor8 <- data.frame (DL_B20_X$B20.Merkmal_07_umkodiert, DL_B20_X$B20.Ursachen_03_umkodiert, DL_B20_X$B20.Ursachen_05_umkodiert, DL_B20_X$B20.Merkmal_06_umkodiert)
+#print(Faktor8)
+# (0) Cronbachs alpha
+#alpha(Faktor8)
+
+#Cronbachs alpha für die MDL-Skala mit 14 Faktoren berechnen # erfordert Laden des Pakets psychometric
+alpha(subset(DL_B20_X, select = c(B20.Ursachen_15_umkodiert,
+                                  B20.Symptom_05_umkodiert,
+                                  B20.Meinung_04_umkodiert,
+                                  B20.Mittel_15_umkodiert,
+                                  B20.Mittel_06_umkodiert,
+                                  B20.Mittel_05_umkodiert,
+                                  B20.Ursachen_07_umkodiert,
+                                  B20.Merkmal_07_umkodiert,
+                                  B20.Mittel_01_umkodiert,
+                                  B20.Symptom_07_umkodiert,
+                                  B20.Merkmal_05_umkodiert,
+                                  B20.Meinung_01_umkodiert,
+                                  B20.Merkmal_10_umkodiert,
+                                  B20.Merkmal_11_umkodiert, check.keys=TRUE))) # , add check.keys = TRUE if you want to reverse items automatically
+
+
+#Summenscore für jede Person berechnen
+DL_B20_X$MDL_sum <- rowSums(subset(DL_B20_X, select = c(B20.Ursachen_15_umkodiert,
+                                                    B20.Symptom_05_umkodiert,
+                                                    B20.Meinung_04_umkodiert,
+                                                    B20.Mittel_15_umkodiert,
+                                                    B20.Mittel_06_umkodiert,
+                                                    B20.Mittel_05_umkodiert,
+                                                    B20.Ursachen_07_umkodiert,
+                                                    B20.Merkmal_07_umkodiert,
+                                                    B20.Mittel_01_umkodiert,
+                                                    B20.Symptom_07_umkodiert,
+                                                    B20.Merkmal_05_umkodiert,
+                                                    B20.Meinung_01_umkodiert,
+                                                    B20.Merkmal_10_umkodiert,
+                                                    B20.Merkmal_11_umkodiert)), na.rm = TRUE) #Speichern in das Dataframe
+print(DL_B20_X$MDL_sum)
+
+#Mittelwert des Summenscores
+mean(DL_B20_X$MDL_sum)
+#Standarbweichung des Summenscores
+sd(DL_B20_X$MDL_sum)
+# Plot des Mittelwertes
+plot(DL_B20_X$MDL_sum)
+#Deskriptive Statistiken des Summenwertes
+psych::describe(MDL_sum) 
+
+#GRUPPEN
+#1  Betroffener mit Diagnose
+#2 Betroffener ohne Diagnose
+#3              AngehÃ¶riger
+#4                 Behandler
+#5              kein Kontakt
+#997               unplausibel
+
+# Mittelwert und SD des Summenscores der Gruppe 3 = ANGEHÖRIGE
+B20.GRUPPE_3 <-  filter(DL_B20_14_G, B20.GRUPPE == 3)
+Mean_Gruppe_3 <- mean(B20.GRUPPE_3$MDL_sum)
+print(Mean_Gruppe_3)
+sd(B20.GRUPPE_3$MDL_sum)
+# Mittelwert und SD des Summenscores der GRUPPE 4 = BEHANDLER
+B20.GRUPPE_4 <-  filter(DL_B20_14_G, B20.GRUPPE == 4)
+Mean_Gruppe_4 <- mean(B20.GRUPPE_4$MDL_sum)
+print(Mean_Gruppe_4)
+sd(B20.GRUPPE_4$MDL_sum)
+# Mittelwert und SD des Summenscores der Gruppe 5 = KEIN KONTAKT
+B20.GRUPPE_5 <-  filter(DL_B20_14_G, B20.GRUPPE == 5)
+Mean_Gruppe_5 <- mean(B20.GRUPPE_5$MDL_sum)
+print(Mean_Gruppe_5)
+sd(B20.GRUPPE_5$MDL_sum)
+
+# MW und SD von allen drei Gruppen
+describeBy(DL_B20_14_G$MDL_sum, DL_B20_14_G$B20.GRUPPE)
+
+# t-Test zwischen BEHANDLER (4) und KEIN KONTAKT (5)
+B20.GRUPPE_4_5 <-  filter(DL_B20_14_G, B20.GRUPPE == 4 | B20.GRUPPE == 5)
+t.test(B20.GRUPPE_4_5$MDL_sum~B20.GRUPPE_4_5$B20.GRUPPE, var.equal = TRUE, alternative = "two.sided")
+# t.test(B20.GRUPPE_4_5$MDL_sum~B20.GRUPPE_4_5$B20.GRUPPE, var.equal = TRUE, alternative = "greater") einseitig testen
+
+# t-Test zwischen ANGEHÖRIGE (3) und KEIN KONTAKT (5)
+B20.GRUPPE_3_5 <-  filter(DL_B20_14_G, B20.GRUPPE == 3 | B20.GRUPPE == 5)
+t.test(B20.GRUPPE_3_5$MDL_sum~B20.GRUPPE_3_5$B20.GRUPPE, var.equal = TRUE, alternative = "two.sided")
+
+# t-Test zwischen ANGEHÖRIGE (3) und BEHANLDER (4)
+B20.GRUPPE_3_4 <-  filter(DL_B20_14_G, B20.GRUPPE == 3 | B20.GRUPPE == 4)
+t.test(B20.GRUPPE_3_4$MDL_sum~B20.GRUPPE_3_4$B20.GRUPPE, var.equal = TRUE, alternative = "two.sided")
+
+
+#https://rdrr.io/cran/psych/man/kaiser.html
+
+# PACKAGES
+install.packages("lavaan")
+library(lavaan)
+install.packages("car")
+library(car)
+install.packages("sjlabelled")
+library("sjlabelled")
+install.packages("haven")
+library (haven)
+
+# Dataframe 2021 laden
+data_B21 <- read_sav("C:/Users/aleimberger/OneDrive - Stiftung Deutsche Depressionshilfe/Desktop/Barometer 2021.sav", encoding="latin1")
+nrow(data_B21)
+
+# Soziodemografische Daten
+print(data_B21$GRUPPE)
+table(data_B21$GRUPPE)
+
+print(data_B21$Geschlecht)
+table(data_B21$Geschlecht)
+
+print(data_B21$Alter)
+table(data_B21$Alter)
+
+print(data_B21$Schule)
+table(data_B21$Schule)
+
+print(data_B21$Bundesland)
+table(data_B21$Bundesland)
+
+# Umkodieren der Gruppen-Variable
+B21.Gruppe <- data_B21$GRUPPE
+
+# Umkodieren der 52 selektierten Variablen
+B21.Wissen_02_umkodiert <- car::recode(data_B21$Wissen_02, "997=NA; 998=NA; 999=NA; 0:10=0; 11:25=1; 26:40=0; 41:100=0")
+B21.Wissen_02_umkodiert <- set_labels(B21.Wissen_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Wissen_02_umkodiert)
+print(data_B21$Wissen_02)
+
+B21.Wissen_06_umkodiert <- car::recode(data_B21$Wissen_06, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1; 5=0")
+B21.Wissen_06_umkodiert <- set_labels(B21.Wissen_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Wissen_06_umkodiert)
+
+B21.Merkmal_01_umkodiert <- car::recode(data_B21$Merkmal_01, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0") 
+B21.Merkmal_01_umkodiert <- set_labels(B21.Merkmal_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_01_umkodiert)
+
+B21.Merkmal_02_umkodiert <- car::recode(data_B21$Merkmal_02, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Merkmal_02_umkodiert <- set_labels(B21.Merkmal_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_02_umkodiert)
+
+B21.Merkmal_03_umkodiert <- car::recode(data_B21$Merkmal_03, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0") 
+B21.Merkmal_03_umkodiert <- set_labels(B21.Merkmal_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_03_umkodiert)
+
+B21.Merkmal_04_umkodiert <- car::recode(data_B21$Merkmal_04, "997=NA; 998=NA; 999=NA; 3=1; 4=1; 1=0; 2=0")
+B21.Merkmal_04_umkodiert <- set_labels(B21.Merkmal_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_04_umkodiert)
+
+B21.Merkmal_05_umkodiert <- car::recode(data_B21$Merkmal_05, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Merkmal_05_umkodiert <- set_labels(B21.Merkmal_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_05_umkodiert)
+
+B21.Merkmal_06_umkodiert <- car::recode(data_B21$Merkmal_06, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Merkmal_06_umkodiert <- set_labels(B21.Merkmal_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_06_umkodiert)
+
+B21.Merkmal_07_umkodiert <- car::recode(data_B21$Merkmal_07, "997=NA; 998=NA; 999=NA; 3=1; 4=1; 1=0; 2=0")
+B21.Merkmal_07_umkodiert <- set_labels(B21.Merkmal_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_07_umkodiert)
+
+#Merkmal_08 ausgeschlossen
+
+B21.Merkmal_09_umkodiert <- car::recode(data_B21$Merkmal_09, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Merkmal_09_umkodiert <- set_labels(B21.Merkmal_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_09_umkodiert)
+
+B21.Merkmal_10_umkodiert <- car::recode(data_B21$Merkmal_10, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Merkmal_10_umkodiert <- set_labels(B21.Merkmal_10_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_10_umkodiert)
+
+B21.Merkmal_11_umkodiert <- car::recode(data_B21$Merkmal_11, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Merkmal_11_umkodiert <- set_labels(B21.Merkmal_11_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Merkmal_11_umkodiert)
+
+#Ursachen_01 ausgeschlossen
+
+B21.Ursachen_03_umkodiert <- car::recode(data_B21$Ursachen_03, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Ursachen_03_umkodiert <- set_labels(B21.Ursachen_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_03_umkodiert)
+
+B21.Ursachen_04_umkodiert <- car::recode(data_B21$Ursachen_04, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_04_umkodiert <- set_labels(B21.Ursachen_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_04_umkodiert)
+
+B21.Ursachen_05_umkodiert <- car::recode(data_B21$Ursachen_05, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Ursachen_05_umkodiert <- set_labels(B21.Ursachen_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_05_umkodiert)
+
+B21.Ursachen_06_umkodiert <- car::recode(data_B21$Ursachen_06, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Ursachen_06_umkodiert <- set_labels(B21.Ursachen_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_06_umkodiert)
+
+B21.Ursachen_07_umkodiert <- car::recode(data_B21$Ursachen_07, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Ursachen_07_umkodiert <- set_labels(B21.Ursachen_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_07_umkodiert)
+
+B21.Ursachen_08_umkodiert <- car::recode(data_B21$Ursachen_08, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_08_umkodiert <- set_labels(B21.Ursachen_08_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_08_umkodiert)
+
+B21.Ursachen_09_umkodiert <- car::recode(data_B21$Ursachen_09, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Ursachen_09_umkodiert <- set_labels(B21.Ursachen_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_09_umkodiert)
+
+#Ursachen_10 existiert nicht
+
+B21.Ursachen_11_umkodiert <- car::recode(data_B21$Ursachen_11, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_11_umkodiert <- set_labels(B21.Ursachen_11_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_11_umkodiert)
+
+B21.Ursachen_12_umkodiert <- car::recode(data_B21$Ursachen_12, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_12_umkodiert <- set_labels(B21.Ursachen_12_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_12_umkodiert)
+
+B21.Ursachen_13_umkodiert <- car::recode(data_B21$Ursachen_13, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_13_umkodiert <- set_labels(B21.Ursachen_13_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_13_umkodiert)
+
+B21.Ursachen_14_umkodiert <- car::recode(data_B21$Ursachen_14, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_14_umkodiert <- set_labels(B21.Ursachen_14_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_14_umkodiert)
+
+B21.Ursachen_15_umkodiert <- car::recode(data_B21$Ursachen_15, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_15_umkodiert <- set_labels(B21.Ursachen_15_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_15_umkodiert)
+
+B21.Ursachen_16_umkodiert <- car::recode(data_B21$Ursachen_16, "997=NA; 998=NA; 999=NA; 1=0; 2=1; 3=1; 4=0")
+B21.Ursachen_16_umkodiert <- set_labels(B21.Ursachen_16_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Ursachen_16_umkodiert)
+
+B21.Mittel_01_umkodiert <- car::recode(data_B21$Mittel_01, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_01_umkodiert <- set_labels(B21.Mittel_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_01_umkodiert)
+
+B21.Mittel_02_umkodiert <- car::recode(data_B21$Mittel_02, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Mittel_02_umkodiert <- set_labels(B21.Mittel_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_02_umkodiert)
+
+B21.Mittel_03_umkodiert <- car::recode(data_B21$Mittel_03, "997=NA; 998=998; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Mittel_03_umkodiert <- set_labels(B21.Mittel_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_03_umkodiert)
+
+B21.Mittel_04_umkodiert <- car::recode(data_B21$Mittel_04, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_04_umkodiert <- set_labels(B21.Mittel_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_04_umkodiert)
+
+B21.Mittel_05_umkodiert <- car::recode(data_B21$Mittel_05, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_05_umkodiert <- set_labels(B21.Mittel_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_05_umkodiert)
+
+B21.Mittel_06_umkodiert <- car::recode(data_B21$Mittel_06, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Mittel_06_umkodiert <- set_labels(B21.Mittel_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_06_umkodiert)
+
+B21.Mittel_07_umkodiert <- car::recode(data_B21$Mittel_07, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Mittel_07_umkodiert <- set_labels(B21.Mittel_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_07_umkodiert)
+
+B21.Mittel_08_umkodiert <- car::recode(data_B21$Mittel_08, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_08_umkodiert <- set_labels(B21.Mittel_08_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_08_umkodiert)
+
+B21.Mittel_09_umkodiert <- car::recode(data_B21$Mittel_09, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_09_umkodiert <- set_labels(B21.Mittel_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_09_umkodiert)
+
+B21.Mittel_10_umkodiert <- car::recode(data_B21$Mittel_10, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_10_umkodiert <- set_labels(B21.Mittel_10_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_10_umkodiert)
+
+B21.Mittel_11_umkodiert <- car::recode(data_B21$Mittel_11, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_11_umkodiert <- set_labels(B21.Mittel_11_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_11_umkodiert)
+
+B21.Mittel_12_umkodiert <- car::recode(data_B21$Mittel_12, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Mittel_12_umkodiert <- set_labels(B21.Mittel_12_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_12_umkodiert)
+
+B21.Mittel_13_umkodiert <- car::recode(data_B21$Mittel_13, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Mittel_13_umkodiert <- set_labels(B21.Mittel_13_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_13_umkodiert)
+
+B21.Mittel_14_umkodiert <- car::recode(data_B21$Mittel_14, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_14_umkodiert <- set_labels(B21.Mittel_14_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_14_umkodiert)
+
+B21.Mittel_15_umkodiert <- car::recode(data_B21$Mittel_15, "997=NA; 998=NA; 999=NA; 1=1; 2=1; 3=0; 4=0")
+B21.Mittel_15_umkodiert <- set_labels(B21.Mittel_15_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Mittel_15_umkodiert)
+
+B21.Meinung_04_umkodiert <- car::recode(data_B21$Meinung_04, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B21.Meinung_04_umkodiert <- set_labels(B21.Meinung_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Meinung_04_umkodiert)
+
+B21.Meinung_01_umkodiert <- car::recode(data_B21$Meinung_01, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B21.Meinung_01_umkodiert <- set_labels(B21.Meinung_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Meinung_01_umkodiert)
+
+B21.Meinung_02_umkodiert <- car::recode(data_B21$Meinung_02, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B21.Meinung_02_umkodiert <- set_labels(B21.Meinung_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Meinung_02_umkodiert)
+
+B21.Meinung_03_umkodiert <- car::recode(data_B21$Meinung_03, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B21.Meinung_03_umkodiert <- set_labels(B21.Meinung_03_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Meinung_03_umkodiert)
+
+B21.Symptom_01_umkodiert <- car::recode(data_B21$Symptom_01, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B21.Symptom_01_umkodiert <- set_labels(B21.Symptom_01_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_01_umkodiert)
+
+B21.Symptom_02_umkodiert <- car::recode(data_B21$Symptom_02, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B21.Symptom_02_umkodiert <- set_labels(B21.Symptom_02_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_02_umkodiert)
+
+#Symptom_03 ausgeschlossen
+
+B21.Symptom_04_umkodiert <- car::recode(data_B21$Symptom_04, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B21.Symptom_04_umkodiert <- set_labels(B21.Symptom_04_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_04_umkodiert)
+
+B21.Symptom_05_umkodiert <- car::recode(data_B21$Symptom_05, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B21.Symptom_05_umkodiert <- set_labels(B21.Symptom_05_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_05_umkodiert)
+
+B21.Symptom_06_umkodiert <- car::recode(data_B21$Symptom_06, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B21.Symptom_06_umkodiert <- set_labels(B21.Symptom_06_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_06_umkodiert)
+
+B21.Symptom_07_umkodiert <- car::recode(data_B21$Symptom_07, "997=NA; 998=NA; 999=NA; 1=0; 2=1")
+B21.Symptom_07_umkodiert <- set_labels(B21.Symptom_07_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_07_umkodiert)
+
+B21.Symptom_08_umkodiert <- car::recode(data_B21$Symptom_08, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B21.Symptom_08_umkodiert <- set_labels(B21.Symptom_08_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_08_umkodiert)
+
+B21.Symptom_09_umkodiert <- car::recode(data_B21$Symptom_09, "997=NA; 998=NA; 999=NA; 1=1; 2=0")
+B21.Symptom_09_umkodiert <- set_labels(B21.Symptom_09_umkodiert, labels =c("ja"=1, "nein"=0, "Fehlend"=NA))
+print(B21.Symptom_09_umkodiert)
+
+# Umkodieren der Variablen Wissen_01 Wie gut fühlen Sie sich über das Thema Depression informiert?
+B21.Wissen_01_umkodiert <- car::recode(data_B21$Wissen_01, "997=NA; 998=NA; 999=NA; 1=0; 2=0; 3=1; 4=1")
+B21.Wissen_01_umkodiert <- set_labels(B21.Wissen_01_umkodiert, labels =c("gut informiert"=1, "nicht gut informiert"=0, "Fehlend"=NA))
+print(B21.Wissen_01_umkodiert)
+
+# Umkodieren der Variablen Wissen_01 Wie gut fühlen Sie sich über das Thema Depression informiert?
+B21.Wissen_01 <- data_B21$Wissen_01
+print(B21.Wissen_01)
+
+# Umkodieren der Variablen der Depression Stigma Scale
+B21.DSS_01 <- data_B21$DSS_01
+B21.DSS_02 <- data_B21$DSS_02
+B21.DSS_03 <- data_B21$DSS_03
+B21.DSS_04 <- data_B21$DSS_04
+B21.DSS_05 <- data_B21$DSS_05
+B21.DSS_06 <- data_B21$DSS_06
+B21.DSS_07 <- data_B21$DSS_07
+B21.DSS_08 <- data_B21$DSS_08
+B21.DSS_09 <- data_B21$DSS_09
+B21.DSS_10 <- data_B21$DSS_10
+B21.DSS_11 <- data_B21$DSS_11
+B21.DSS_12 <- data_B21$DSS_12
+B21.DSS_13 <- data_B21$DSS_13
+B21.DSS_14 <- data_B21$DSS_14
+B21.DSS_15 <- data_B21$DSS_15
+B21.DSS_16 <- data_B21$DSS_16
+B21.DSS_17 <- data_B21$DSS_17
+B21.DSS_18 <- data_B21$DSS_18
+
+# Erstellen eines Dataframes des Barometer 2021 mit allen notwendigen Variablen
+DL_B21 <- data.frame(
+  B21.Wissen_02_umkodiert,
+  B21.Wissen_06_umkodiert,
+  B21.Merkmal_01_umkodiert,
+  B21.Merkmal_02_umkodiert,
+  B21.Merkmal_03_umkodiert,
+  B21.Merkmal_04_umkodiert,
+  B21.Merkmal_05_umkodiert,
+  B21.Merkmal_06_umkodiert,
+  B21.Merkmal_07_umkodiert,
+  B21.Merkmal_09_umkodiert,
+  B21.Merkmal_10_umkodiert,
+  B21.Merkmal_11_umkodiert,
+  B21.Ursachen_03_umkodiert,
+  B21.Ursachen_04_umkodiert,
+  B21.Ursachen_05_umkodiert,
+  B21.Ursachen_06_umkodiert,
+  B21.Ursachen_07_umkodiert,
+  B21.Ursachen_08_umkodiert,
+  B21.Ursachen_09_umkodiert,
+  B21.Ursachen_11_umkodiert,
+  B21.Ursachen_12_umkodiert,
+  B21.Ursachen_13_umkodiert,
+  B21.Ursachen_14_umkodiert,
+  B21.Ursachen_15_umkodiert,
+  B21.Ursachen_16_umkodiert,
+  B21.Mittel_01_umkodiert,
+  B21.Mittel_02_umkodiert,
+  B21.Mittel_03_umkodiert,
+  B21.Mittel_04_umkodiert,
+  B21.Mittel_05_umkodiert,
+  B21.Mittel_06_umkodiert,
+  B21.Mittel_07_umkodiert,
+  B21.Mittel_08_umkodiert,
+  B21.Mittel_09_umkodiert,
+  B21.Mittel_10_umkodiert,
+  B21.Mittel_11_umkodiert,
+  B21.Mittel_12_umkodiert,
+  B21.Mittel_13_umkodiert,
+  B21.Mittel_14_umkodiert,
+  B21.Mittel_15_umkodiert,
+  B21.Meinung_04_umkodiert,
+  B21.Meinung_01_umkodiert,
+  B21.Meinung_02_umkodiert,
+  B21.Meinung_03_umkodiert,
+  B21.Symptom_01_umkodiert,
+  B21.Symptom_02_umkodiert,
+  B21.Symptom_04_umkodiert,
+  B21.Symptom_05_umkodiert,
+  B21.Symptom_06_umkodiert,
+  B21.Symptom_07_umkodiert,
+  B21.Symptom_08_umkodiert,
+  B21.Symptom_09_umkodiert,
+  B21.Gruppe,
+  B21.Wissen_01,
+  B21.DSS_01,
+  B21.DSS_02,
+  B21.DSS_03,
+  B21.DSS_04,
+  B21.DSS_05,
+  B21.DSS_06,
+  B21.DSS_07,
+  B21.DSS_08,
+  B21.DSS_09,
+  B21.DSS_10,
+  B21.DSS_11,
+  B21.DSS_12,
+  B21.DSS_13,
+  B21.DSS_14,
+  B21.DSS_15,
+  B21.DSS_16,
+  B21.DSS_17,
+  B21.DSS_18
+)
+
+print(DL_B21)
+
+##New Dataframe: Cases without missings
+DL_B21_X <- na.omit(DL_B21)
+print(DL_B21_X)
+nrow(DL_B21_X)
+
+print(DL_B21_X$B21.Gruppe)
+table(DL_B21_X$B21.Gruppe)
+
+#Summenscore für jede Person berechnen und in Datframe einfügen
+DL_B21_X$MDL_sum <- rowSums(subset(DL_B21_X, select = c(B21.Ursachen_15_umkodiert, # Summenscore MDL_sum wird in das Dataframe eingefügt
+                                                              B21.Symptom_05_umkodiert,
+                                                              B21.Meinung_04_umkodiert,
+                                                              B21.Mittel_15_umkodiert,
+                                                              B21.Mittel_06_umkodiert,
+                                                              B21.Mittel_05_umkodiert,
+                                                              B21.Ursachen_07_umkodiert,
+                                                              B21.Merkmal_07_umkodiert,
+                                                              B21.Mittel_01_umkodiert,
+                                                              B21.Symptom_07_umkodiert,
+                                                              B21.Merkmal_05_umkodiert,
+                                                              B21.Meinung_01_umkodiert,
+                                                              B21.Merkmal_10_umkodiert,
+                                                              B21.Merkmal_11_umkodiert)), na.rm = TRUE) #Speichern in das Dataframe
+print(DL_B21_X$MDL_sum)
+
+
+#Cronbachs alpha für die MDL-Skala mit 14 Faktoren berechnen # erfordert Laden des Pakets psychometric
+alpha(subset(DL_B21_X, select = c(B21.Ursachen_15_umkodiert,
+                                  B21.Symptom_05_umkodiert,
+                                  B21.Meinung_04_umkodiert,
+                                  B21.Mittel_15_umkodiert,
+                                  B21.Mittel_06_umkodiert,
+                                  B21.Mittel_05_umkodiert,
+                                  B21.Ursachen_07_umkodiert,
+                                  B21.Merkmal_07_umkodiert,
+                                  B21.Mittel_01_umkodiert,
+                                  B21.Symptom_07_umkodiert,
+                                  B21.Merkmal_05_umkodiert,
+                                  B21.Meinung_01_umkodiert,
+                                  B21.Merkmal_10_umkodiert,
+                                  B21.Merkmal_11_umkodiert))) # , add check.keys =TRUE if you want to reverse items automatically
+
+# Summenscore (MDL_sum) für jede Person berechnen
+DL_B21_X$MDL_sum <- rowSums(subset(DL_B21_X, select = c(B21.Ursachen_15_umkodiert, # Summenscore M-DL sum wird in Dataframe eingefügt
+                                                              B21.Symptom_05_umkodiert,
+                                                              B21.Meinung_04_umkodiert,
+                                                              B21.Mittel_15_umkodiert,
+                                                              B21.Mittel_06_umkodiert,
+                                                              B21.Mittel_05_umkodiert,
+                                                              B21.Ursachen_07_umkodiert,
+                                                              B21.Merkmal_07_umkodiert,
+                                                              B21.Mittel_01_umkodiert,
+                                                              B21.Symptom_07_umkodiert,
+                                                              B21.Merkmal_05_umkodiert,
+                                                              B21.Meinung_01_umkodiert,
+                                                              B21.Merkmal_10_umkodiert,
+                                                              B21.Merkmal_11_umkodiert)), na.rm = TRUE) #Speichern in das Dataframe
+
+#Mittelwert des Summenscores (MDL_sum) des Barometers 2021
+mean(DL_B21_X$MDL_sum)
+#Standarbweichung des Summenscores (MDL_sum) des Barometers 2021
+sd(DL_B21_X$MDL_sum)
+# Plot des Mittelwertes
+plot(DL_B21_X$MDL_sum)
+#Deskriptive Statistiken des Summenwertes
+psych::describe(DL_B21_X$MDL_sum) 
+
+
+print(DL_B21_X)
+##Exploratorische Faktorenanalyse der 14 Faktoren
+DL_B21_X_14 <- c (B21.Ursachen_15_umkodiert
+                           B21.Symptom_05_umkodiert,
+                           B21.Meinung_04_umkodiert,
+                           B21.Mittel_15_umkodiert,
+                           B21.Mittel_06_umkodiert,
+                           B21.Mittel_05_umkodiert,
+                           B21.Ursachen_07_umkodiert,
+                           B21.Merkmal_07_umkodiert,
+                           B21.Mittel_01_umkodiert,
+                           B21.Symptom_07_umkodiert,
+                           B21.Merkmal_05_umkodiert,
+                           B21.Meinung_01_umkodiert,
+                           B21.Merkmal_10_umkodiert,
+                           B21.Merkmal_11_umkodiert)
+
+print(DL_B21_X_14)
+
+#### ERNEUTE BERECHNUNG DER EXPLORATORISCHEN FAKTORENANALYSE
+fa.parallel(DL_B21_X_14, fa="fa")
+
+
+
+
+# Mittelwert und SD des Summenscores der Gruppe 3 = ANGEHÖRIGE
+##B21.Gruppe_3 <-  filter(DL_B21_X, B21.Gruppe == 3)
+##Mean_Gruppe_3 <- mean(B21.Gruppe_3$MDL_sum)
+##print(Mean_Gruppe_3)
+##sd(B21.Gruppe_3$MDL_sum)
+# Mittelwert und SD des Summenscores der GRUPPE 4 = BEHANDLER
+##B21.Gruppe_4 <-  filter(DL_B21_X, B21.Gruppe == 4)
+##Mean_Gruppe_4 <- mean(B21.Gruppe_4$MDL_sum)
+##print(Mean_Gruppe_4)
+##sd(B21.Gruppe_4$MDL_sum)
+# Mittelwert und SD des Summenscores der Gruppe 5 = KEIN KONTAKT
+#B21.Gruppe_5 <-  filter(DL_B21_X, B21.Gruppe == 5)
+#Mean_Gruppe_5 <- mean(B21.Gruppe_5$MDL_sum)
+#print(Mean_Gruppe_5)
+#sd(B20.GRUPPE_5$MDL_sum)
+
+# MW und SD von allen drei Gruppen (3 = ANGEHÖRIGE, 4 = BEHANDLER, 5 = KEIN KONTAKT)
+print(DL_B21_X$B21.Gruppe)
+table(DL_B21_X$B21.Gruppe) # 3 (ANGEHÖRIGE) = 1380, 4 (BEHANDLER) = 56, 5 (KEIN KONTAKT) = 1658
+describeBy(DL_B21_X$MDL_sum, DL_B21_X$B21.Gruppe)
+nrow(DL_B21_X)
+((1380+56)/3094)*100 # Anteil der Angehörigen + Behandler an Gesamtgruppe = 46.60%
+((1380)/3094)*100 # Anteil der Angehörigen an Gesamtgruppe 44.60%
+((56)/3094)*100 # Anteil der Behandler an Gesamtgruppe 1.81%
+((1658)/3094)*100 # Anteil der Personen ohne Kontakt an Gesamtgruppe 53.59%
+
+# t-Test zwischen BEHANDLER (4) und KEIN KONTAKT (5)
+B21.Gruppe_4_5 <-  filter(DL_B21_X, B21.Gruppe == 4 | B21.Gruppe == 5)
+t.test(B21.Gruppe_4_5$MDL_sum~B21.Gruppe_4_5$B21.Gruppe, var.equal = TRUE, alternative = "two.sided")
+# t.test(B20.GRUPPE_4_5$MDL_sum~B20.GRUPPE_4_5$B20.GRUPPE, var.equal = TRUE, alternative = "greater") einseitig testen
+
+# t-Test zwischen ANGEHÖRIGE (3) und KEIN KONTAKT (5)
+B21.Gruppe_3_5 <-  filter(DL_B21_X, B21.Gruppe == 3 | B21.Gruppe == 5)
+t.test(B21.Gruppe_3_5$MDL_sum~B21.Gruppe_3_5$B21.Gruppe, var.equal = TRUE, alternative = "two.sided")
+
+# t-Test zwischen ANGEHÖRIGE (3) und BEHANLDER (4)
+B21.Gruppe_3_4 <-  filter(DL_B21_X, B21.Gruppe == 3 | B21.Gruppe == 4)
+t.test(B21.Gruppe_3_4$MDL_sum~B21.Gruppe_3_4$B21.Gruppe, var.equal = TRUE, alternative = "two.sided")
+
+
+
+# Berechnung des Summenscores der Personal Stigma Subscale (DSS_Perceived) für jede Person
+DL_B21_X$DSS_Personal <- rowSums(subset(DL_B21_X, select = c(B21.DSS_01, # Einfügen des DSS_Personal in das Dataframe DL_B21_x
+                                                              B21.DSS_02,
+                                                              B21.DSS_03,
+                                                              B21.DSS_04,
+                                                              B21.DSS_05,
+                                                              B21.DSS_06,
+                                                              B21.DSS_07,
+                                                              B21.DSS_08,
+                                                              B21.DSS_09))) #Speichern in das Dataframe
+print(DL_B21_X$DSS_Personal)
+
+# Berechnung des Summenscores der Perceived Stigma Subscale (DSS_Perceived) für jede Person
+DL_B21_X$DSS_Perceived <- rowSums(subset(DL_B21_X, select = c(B21.DSS_10, # Einfügen des DSS_Perceived in das Dataframe DL_B21_X
+                                                             B21.DSS_11,
+                                                             B21.DSS_12,
+                                                             B21.DSS_13,
+                                                             B21.DSS_14,
+                                                             B21.DSS_15,
+                                                             B21.DSS_16,
+                                                             B21.DSS_17,
+                                                             B21.DSS_18))) #Speichern in das Dataframe
+
+# Korrelation des M-DL Summenscores mit der Variable B21.Wissen_01 "Wie gut fühlen Sie sich über das Thema Depression informiert?"
+test <- cor.test(DL_B21_X$MDL_sum, DL_B21_X$B21.Wissen_01)
+test
+# Korrelation des M-DL Summenscores mit dem Summenscore der Personal Stigma Subscale (DSS_Personal)
+test <- cor.test(DL_B21_X$MDL_sum, DL_B21_X$DSS_Personal)
+test
+# Korrelation des M-DL Summenscores mit dem Summenscore der Perceived Stigma Subscale (DSS_Perceived)
+test <- cor.test(DL_B21_X$MDL_sum, DL_B21_X$DSS_Perceived)
+test
+
+
+# Scatterplot darstellen
+x <- 2192:5285
+y <- DL_B21_X$MDL_sum
+# Plot with main and axis titles
+# Change point shape (pch = 19) and remove frame.
+plot(x, y, main = "Scatter plot",
+     xlab = "X axis title", ylab = "Y axis title",
+     pch = 19, frame = FALSE)
+
+# Scatterplot der Korrelationen
+scatterplot (MDL_sum ~ B21.Wissen_01, data = DL_B21_X) # Korrelation zwischen 
+scatterplot(MDL_sum ~ DSS_Personal, data = DL_B21_X)
+scatterplot(MDL_sum ~ DSS_Perceived, data = DL_B21_X)
+
+###########################################################################################################
+
+### CONFIRMATORY FACTOR ANALYSIS ###
+
+library(lavaan)
+##Short-cut: If all the (endogenous) variables are to be treated as categorical
+ordered = TRUE
+#Lvaan will automatically swith to the WLSMV estimator: it will use diagonlly weightes least squares (DWLS) to estimate the model parameters, 
+#but it will use the full weight matrix to compute robust standard errors, and a mean- and vairance-adjusted test-statistic
+
+##Modell1: One item per factor
+#Rechts: Indikatorvariablen aus dem Datensatz, die den Faktor bestimmen
+model1 <- '
+  PsychosocialCause =~ B21.Ursachen_15_umkodiert
+  Symptom =~ B21.Symptom_05_umkodiert
+  Antidepressant =~ B21.Meinung_04_umkodiert
+  Adjuvant =~ B21.Mittel_15_umkodiert
+  NoFirstHelp =~ B21.Mittel_06_umkodiert
+  Intervention =~ B21.Mittel_05_umkodiert
+  NoPsychosocialCause =~ B21.Ursachen_07_umkodiert
+  BiologicalCause =~ B21.Merkmal_07_umkodiert
+  FristHelp =~ B21.Mittel_01_umkodiert
+  NoSymptom =~ B21.Symptom_07_umkodiert
+  NoGeneral =~ B21.Merkmal_05_umkodiert
+  NoAntidepressant =~ B21.Meinung_01_umkodiert
+  InterventionPT =~ B21.Merkmal_10_umkodiert
+  General =~ B21.Merkmal_11_umkodiert
+  '
+
+print(model1)
+
+#Modellindifikation: Wie viel Faktoren braucht man, um einen Faktor messbar zu machen?
+model.fit1 <- cfa(model = model1, data=DL_B21_X, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+print(DL_B21_X)
+
+summary(model.fit1, fit.measures = TRUE, standardized=TRUE) # fit.measures=Fit-Indizes, standardisierte Variablen
+##Ergebnis: Freiheitsgrade gleich 0, kein Chi-Value
+
+##Respecification of the model:
+mi <- modindices(model.fit1)
+mi[mi$mi > 10,] # Modification indices that are bigger than 10
+
+
+##Modell1.1: One item per factor+Merkmal_04_umkodiert in Faktor 14 - SEHR GUTES MODELL
+#Rechts: Indikatorvariablen aus dem Datensatz, die den Fatkor bestimmen
+model1.1 <- '
+  PsychosocialCause =~ B21.Ursachen_15_umkodiert
+  Symptom =~ B21.Symptom_05_umkodiert
+  Antidepressant =~ B21.Meinung_04_umkodiert
+  Adjuvant =~ B21.Mittel_15_umkodiert
+  NoFirstHelp =~ B21.Mittel_06_umkodiert
+  Intervention =~ B21.Mittel_05_umkodiert
+  NoPsychosocialCause =~ B21.Ursachen_07_umkodiert
+  BiologicalCause =~ B21.Merkmal_07_umkodiert
+  FristHelp =~ B21.Mittel_01_umkodiert
+  NoSymptom =~ B21.Symptom_07_umkodiert
+  NoGeneral =~ B21.Merkmal_05_umkodiert
+  NoAntidepressant =~ B21.Meinung_01_umkodiert
+  InterventionPT =~ B21.Merkmal_10_umkodiert
+  General =~ B21.Merkmal_11_umkodiert + B21.Merkmal_04_umkodiert
+  '
+
+print(model1.1)
+
+#Modellindifikation: Wie viel Faktoren braucht man, um einen Faktor messbar zu machen?
+model.fit1.1 <- cfa(model = model1.1, data=DL_B21_X, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+
+summary(model.fit1.1, fit.measures = TRUE, standardized=TRUE) # fit.measures=Fit-Indizes, standardisierte Variablen
+##Ergebnis: Freiheitsgrade gleich 0, kein Chi-Value
+
+##Respecification of the model:
+mi <- modindices(model.fit1.1)
+print(mi)
+mi[mi$mi > 10,] # Modification indices that are bigger than 10
+
+##Modell1.2: One item per factor without factor 14
+#Rechts: Indikatorvariablen aus dem Datensatz, die den Fatkor bestimmen
+model1.2 <- '
+  PsychosocialCause =~ B21.Ursachen_15_umkodiert
+  Symptom =~ B21.Symptom_05_umkodiert
+  Antidepressant =~ B21.Meinung_04_umkodiert
+  Adjuvant =~ B21.Mittel_15_umkodiert
+  NoFirstHelp =~ B21.Mittel_06_umkodiert
+  Intervention =~ B21.Mittel_05_umkodiert
+  NoPsychosocialCause =~ B21.Ursachen_07_umkodiert
+  BiologicalCause =~ B21.Merkmal_07_umkodiert
+  FristHelp =~ B21.Mittel_01_umkodiert
+  NoSymptom =~ B21.Symptom_07_umkodiert
+  NoGeneral =~ B21.Merkmal_05_umkodiert
+  NoAntidepressant =~ B21.Meinung_01_umkodiert
+  InterventionPT =~ B21.Merkmal_10_umkodiert + B21.Merkmal_09_umkodiert
+  '
+
+print(model1.2)
+
+#Modellindifikation: Wie viel Faktoren braucht man, um einen Faktor messbar zu machen?
+model.fit1.2 <- cfa(model = model1.2, data=DL_B21_X, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+
+summary(model.fit1.2, fit.measures = TRUE, standardized=TRUE) # fit.measures=Fit-Indizes, standardisierte Variablen
+##Ergebnis: Freiheitsgrade gleich 0, kein Chi-Value
+
+##Respecification of the model:
+mi <- modindices(model.fit2)
+mi[mi$mi > 10,] # Modification indices that are bigger than 10
+
+
+
+#####################################################################
+##Modell4: 52 Items auf 14 Faktoren verteilt
+model4 <- '
+  F1.PsychosocialCause =~ B21.Ursachen_04_umkodiert + B21.Ursachen_08_umkodiert + B21.Ursachen_11_umkodiert + B21.Ursachen_12_umkodiert + B21.Ursachen_13_umkodiert + B21.Ursachen_14_umkodiert + B21.Ursachen_15_umkodiert + B21.Ursachen_16_umkodiert
+  F2.Symptom =~ B21.Symptom_02_umkodiert + B21.Symptom_04_umkodiert + B21.Symptom_05_umkodiert + B21.Symptom_08_umkodiert + B21.Symptom_09_umkodiert
+  F3.Antidepressant =~ B21.Mittel_09_umkodiert + B21.Meinung_04_umkodiert + B21.Meinung_03_umkodiert
+  F4.Adjuvant =~ B21.Mittel_08_umkodiert + B21.Mittel_10_umkodiert + B21.Mittel_12_umkodiert + B21.Mittel_14_umkodiert + B21.Mittel_15_umkodiert
+  F5.NoFirstHelp =~ B21.Ursachen_09_umkodiert + B21.Mittel_03_umkodiert + B21.Mittel_06_umkodiert + B21.Mittel_07_umkodiert
+  F6.Intervention =~ B21.Mittel_04_umkodiert + B21.Mittel_05_umkodiert
+  F7.NoPsychosocialCause =~ B21.Ursachen_06_umkodiert + B21.Ursachen_07_umkodiert
+  F8.BiologicalCause =~ B21.Merkmal_07_umkodiert + B21.Ursachen_03_umkodiert + B21.Ursachen_05_umkodiert + B21.Merkmal_06_umkodiert
+  F9.FristHelp =~ B21.Mittel_01_umkodiert + B21.Mittel_02_umkodiert + B21.Mittel_11_umkodiert + B21.Mittel_13_umkodiert
+  F10.NoSymptom =~ B21.Symptom_01_umkodiert + B21.Symptom_06_umkodiert + B21.Symptom_07_umkodiert
+  F11.NoGeneral =~ B21.Merkmal_02_umkodiert + B21.Merkmal_03_umkodiert + B21.Merkmal_05_umkodiert + B21.Merkmal_01_umkodiert
+  F12.NoAntidepressant =~ B21.Meinung_01_umkodiert + B21.Meinung_02_umkodiert
+  F13.InterventionPT =~ B21.Merkmal_09_umkodiert + B21.Merkmal_10_umkodiert + B21.Wissen_02_umkodiert + B21.Wissen_06_umkodiert
+  F14.General =~ B21.Merkmal_04_umkodiert + B21.Merkmal_11_umkodiert
+  '
+
+print(model4)
+
+#Kategoriale Variablen
+model.fit4 <- cfa(model = model4, data=DL_B21_X, ordered = TRUE, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+summary(model.fit4, fit.measures = TRUE, standardized=TRUE) # fit.meausres = TRUE: fit-Indizes werden ausgegeben, standardizes=TRUE: standardisierte Ergebnisse, also Korrelationen (besser interpretierbar)
+#Keine Berücksichtigung der kategorialen Variablen
+#model.fit4 <- cfa(model = model4, data=DL_B21_X, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+#summary(model.fit4, fit.measures = TRUE, standardized=TRUE) 
+# fit.measures=Fit-Indizes: Ausgabe weiterer Modellgütekriterien
+# standardized=TRUE: Standardisierte Lösung, d.h. Parameterschätzungen für den Fall, dass alle latenten und beobachteten Variablen im Modell standardisiert sind (Standardabweichung = 1)
+
+# Inhaltlich mögliche Veränderungen
+# F3.Antidepressant =~ B21.Merkmal_09_umkodiert 382.185
+# F6.Intervention =~ B21.Merkmal_10_umkodiert 550.769
+# F11.NoGeneral =~ B21.Merkmal_06_umkodiert 429.371
+
+
+
+##Respecification of the model:
+mi <- modindices(model.fit4)
+mi[mi$mi > 300,] # Modification indices that are bigger than 500
+
+#####################################################################
+##Modell4.1: 52 Items auf 14 Faktoren verteilt (Angepasstes Modell)
+model4.1 <- '
+  F1.PsychosocialCause =~ B21.Ursachen_04_umkodiert + B21.Ursachen_08_umkodiert + B21.Ursachen_11_umkodiert + B21.Ursachen_12_umkodiert + B21.Ursachen_13_umkodiert + B21.Ursachen_14_umkodiert + B21.Ursachen_15_umkodiert + B21.Ursachen_16_umkodiert
+  F2.Symptom =~ B21.Symptom_02_umkodiert + B21.Symptom_04_umkodiert + B21.Symptom_05_umkodiert + B21.Symptom_08_umkodiert + B21.Symptom_09_umkodiert
+  F3.Antidepressant =~ B21.Mittel_09_umkodiert + B21.Meinung_04_umkodiert + B21.Meinung_03_umkodiert
+  F4.Adjuvant =~ B21.Mittel_08_umkodiert + B21.Mittel_10_umkodiert + B21.Mittel_12_umkodiert + B21.Mittel_14_umkodiert + B21.Mittel_15_umkodiert
+  F5.NoFirstHelp =~ B21.Ursachen_09_umkodiert + B21.Mittel_03_umkodiert + B21.Mittel_06_umkodiert + B21.Mittel_07_umkodiert
+  F6.Intervention =~ B21.Mittel_04_umkodiert + B21.Mittel_05_umkodiert
+  F7.NoPsychosocialCause =~ B21.Ursachen_06_umkodiert + B21.Ursachen_07_umkodiert
+  F8.BiologicalCause =~ B21.Merkmal_07_umkodiert + B21.Ursachen_03_umkodiert + B21.Ursachen_05_umkodiert
+  F9.FristHelp =~ B21.Mittel_01_umkodiert + B21.Mittel_02_umkodiert + B21.Mittel_11_umkodiert + B21.Mittel_13_umkodiert
+  F10.NoSymptom =~ B21.Symptom_01_umkodiert + B21.Symptom_06_umkodiert + B21.Symptom_07_umkodiert
+  F11.NoGeneral =~ B21.Merkmal_02_umkodiert + B21.Merkmal_03_umkodiert + B21.Merkmal_05_umkodiert + B21.Merkmal_01_umkodiert + B21.Merkmal_06_umkodiert
+  F12.NoAntidepressant =~ B21.Meinung_01_umkodiert + B21.Meinung_02_umkodiert
+  F13.InterventionPT =~ B21.Merkmal_09_umkodiert + B21.Merkmal_10_umkodiert + B21.Wissen_02_umkodiert + B21.Wissen_06_umkodiert
+  F14.General =~ B21.Merkmal_04_umkodiert + B21.Merkmal_11_umkodiert
+  '
+
+# Merkmal_06_umkodiert hinzugefügt
+
+print(model4.1)
+
+#model.fit4.1 <- cfa(model = model4.1, data=DL_B21_X, ordered = TRUE, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+model.fit4.1 <- cfa(model = model4.1, data=DL_B21_X, ordered = TRUE, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+summary(model.fit4.1, fit.measures = TRUE, standardized=TRUE) 
+# fit.measures=Fit-Indizes: Ausgabe weiterer Modellgütekriterien
+# standardized=TRUE: Standardisierte Lösung, d.h. Parameterschätzungen für den Fall, dass alle latenten und beobachteten Variablen im Modell standardisiert sind (Standardabweichung = 1)
+
+
+##Respecification of the model:
+mi <- modindices(model.fit4.1)
+mi[mi$mi > 550,] # Modification indices that are bigger than 150
+
+##Comparison of both models
+lavTestLRT(model.fit4, model.fit4.1)
+
+
+
+
+##Modell mit 52 Items auf 12 Faktoren (entsprechend der Parallelanalyse) verteilt.
+model5 <- '
+  F1.PsychosocialCause =~ B21.Ursachen_04_umkodiert + B21.Ursachen_08_umkodiert + B21.Ursachen_11_umkodiert + B21.Ursachen_12_umkodiert + B21.Ursachen_13_umkodiert + B21.Ursachen_14_umkodiert + B21.Ursachen_15_umkodiert + B21.Ursachen_16_umkodiert + B21.Merkmal_10_umkodiert
+  F2.Symptom =~ B21.Symptom_02_umkodiert + B21.Symptom_04_umkodiert + B21.Symptom_05_umkodiert + B21.Symptom_08_umkodiert + B21.Symptom_09_umkodiert
+  F3.Antidepressant =~ B21.Mittel_09_umkodiert + B21.Meinung_04_umkodiert + B21.Meinung_03_umkodiert + B21.Merkmal_09_umkodiert
+  F4.Adjuvant =~ B21.Mittel_08_umkodiert + B21.Mittel_10_umkodiert + B21.Mittel_12_umkodiert + B21.Mittel_14_umkodiert + B21.Mittel_15_umkodiert
+  F5.Intervention =~ B21.Mittel_04_umkodiert + B21.Mittel_05_umkodiert + B21.Wissen_06_umkodiert + B21.Merkmal_11_umkodiert
+  F6.NoFirstHelp =~ B21.Ursachen_09_umkodiert + B21.Mittel_03_umkodiert + B21.Mittel_06_umkodiert + B21.Mittel_07_umkodiert
+  F7.BiologicalCause =~ B21.Merkmal_06_umkodiert + B21.Merkmal_07_umkodiert + B21.Ursachen_03_umkodiert + B21.Ursachen_05_umkodiert
+  F8.NoPsychosocialCause =~ B21.Ursachen_06_umkodiert + B21.Ursachen_07_umkodiert
+  F9.NoSymptom =~ B21.Symptom_01_umkodiert + B21.Symptom_06_umkodiert + B21.Symptom_07_umkodiert
+  F10.NoGeneral =~ B21. Wissen_02_umkodiert + B21.Merkmal_01_umkodiert + B21.Merkmal_02_umkodiert + B21.Merkmal_03_umkodiert + B21.Merkmal_05_umkodiert + B21.Merkmal_04_umkodiert
+  F11.FristHelp =~ B21.Mittel_01_umkodiert + B21.Mittel_02_umkodiert + B21.Mittel_11_umkodiert + B21.Mittel_13_umkodiert
+  F12.NoAntidepressant =~ B21.Meinung_01_umkodiert + B21.Meinung_02_umkodiert
+  '
+
+print(model5)
+
+#Keine Berücksichtigung kategorialer Variablen
+#model.fit5 <- cfa(model = model5, data=DL_B21_X, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+#summary(model.fit5, fit.measures = TRUE, standardized=TRUE) 
+
+#Kategoriale Variablen
+model.fit5 <- cfa(model = model5, data=DL_B21_X, ordered = TRUE, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+summary(model.fit5, fit.measures = TRUE, standardized=TRUE) 
+
+# fit.measures=Fit-Indizes: Ausgabe weiterer Modellgütekriterien
+# standardized=TRUE: Standardisierte Lösung, d.h. Parameterschätzungen für den Fall, dass alle latenten und beobachteten Variablen im Modell standardisiert sind (Standardabweichung = 1)
+
+
+##Respecification of the model:
+mi <- modindices(model.fit5)
+mi[mi$mi > 150,] # Modification indices that are bigger than 150
+
+
+##Modell mit 52 Items auf 12 Faktoren verteilt.
+model5.1 <- '
+  F1.PsychosocialCause =~ B21.Ursachen_04_umkodiert + B21.Ursachen_08_umkodiert + B21.Ursachen_11_umkodiert + B21.Ursachen_12_umkodiert + B21.Ursachen_13_umkodiert + B21.Ursachen_14_umkodiert + B21.Ursachen_15_umkodiert + B21.Ursachen_16_umkodiert + B21.Merkmal_10_umkodiert
+  F2.Symptom =~ B21.Symptom_02_umkodiert + B21.Symptom_04_umkodiert + B21.Symptom_05_umkodiert + B21.Symptom_08_umkodiert + B21.Symptom_09_umkodiert
+  F3.Antidepressant =~ B21.Mittel_09_umkodiert + B21.Meinung_04_umkodiert + B21.Meinung_03_umkodiert + B21.Merkmal_09_umkodiert
+  F4.Adjuvant =~ B21.Mittel_08_umkodiert + B21.Mittel_10_umkodiert + B21.Mittel_12_umkodiert + B21.Mittel_14_umkodiert + B21.Mittel_15_umkodiert
+  F5.Intervention =~ B21.Mittel_04_umkodiert + B21.Mittel_05_umkodiert + B21.Wissen_06_umkodiert + B21.Merkmal_11_umkodiert
+  F6.NoFirstHelp =~ B21.Ursachen_09_umkodiert + B21.Mittel_03_umkodiert + B21.Mittel_06_umkodiert + B21.Mittel_07_umkodiert
+  F7.BiologicalCause =~ B21.Merkmal_07_umkodiert + B21.Ursachen_03_umkodiert + B21.Ursachen_05_umkodiert
+  F8.NoPsychosocialCause =~ B21.Ursachen_06_umkodiert + B21.Ursachen_07_umkodiert
+  F9.NoSymptom =~ B21.Symptom_01_umkodiert + B21.Symptom_06_umkodiert + B21.Symptom_07_umkodiert
+  F10.NoGeneral =~ B21. Wissen_02_umkodiert + B21.Merkmal_01_umkodiert + B21.Merkmal_02_umkodiert + B21.Merkmal_03_umkodiert + B21.Merkmal_05_umkodiert + B21.Merkmal_04_umkodiert + B21.Merkmal_06_umkodiert
+  F11.FristHelp =~ B21.Mittel_01_umkodiert + B21.Mittel_02_umkodiert + B21.Mittel_11_umkodiert + B21.Mittel_13_umkodiert
+  F12.NoAntidepressant =~ B21.Meinung_01_umkodiert + B21.Meinung_02_umkodiert
+  
+  B21.Mittel_10_umkodiert ~~ B21.Mittel_11_umkodiert
+
+  '
+
+print(model5.1)
+
+#Kategoriale Variablen
+model.fit5.1 <- cfa(model = model5.1, data=DL_B21_X, oredered = TRUE, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+summary(model.fit5.1, fit.measures = TRUE, standardized=TRUE) 
+
+##Comparison of both models
+lavTestLRT(model.fit5, model.fit5.1)
+
+
+
+##Modell mit 52 Items auf 12 Faktoren verteilt, Kovarianz der Fehlerterme.
+model5.2 <- '
+  F1.PsychosocialCause =~ B21.Ursachen_04_umkodiert + B21.Ursachen_08_umkodiert + B21.Ursachen_11_umkodiert + B21.Ursachen_12_umkodiert + B21.Ursachen_13_umkodiert + B21.Ursachen_14_umkodiert + B21.Ursachen_15_umkodiert + B21.Ursachen_16_umkodiert + B21.Merkmal_10_umkodiert
+  F2.Symptom =~ B21.Symptom_02_umkodiert + B21.Symptom_04_umkodiert + B21.Symptom_05_umkodiert + B21.Symptom_08_umkodiert + B21.Symptom_09_umkodiert
+  F3.Antidepressant =~ B21.Mittel_09_umkodiert + B21.Meinung_04_umkodiert + B21.Meinung_03_umkodiert + B21.Merkmal_09_umkodiert
+  F4.Adjuvant =~ B21.Mittel_08_umkodiert + B21.Mittel_10_umkodiert + B21.Mittel_12_umkodiert + B21.Mittel_14_umkodiert + B21.Mittel_15_umkodiert
+  F5.Intervention =~ B21.Mittel_04_umkodiert + B21.Mittel_05_umkodiert + B21.Wissen_06_umkodiert + B21.Merkmal_11_umkodiert
+  F6.NoFirstHelp =~ B21.Ursachen_09_umkodiert + B21.Mittel_03_umkodiert + B21.Mittel_06_umkodiert + B21.Mittel_07_umkodiert
+  F7.BiologicalCause =~ B21.Merkmal_06_umkodiert + B21.Merkmal_07_umkodiert + B21.Ursachen_03_umkodiert + B21.Ursachen_05_umkodiert
+  F8.NoPsychosocialCause =~ B21.Ursachen_06_umkodiert + B21.Ursachen_07_umkodiert
+  F9.NoSymptom =~ B21.Symptom_01_umkodiert + B21.Symptom_06_umkodiert + B21.Symptom_07_umkodiert
+  F10.NoGeneral =~ B21. Wissen_02_umkodiert + B21.Merkmal_01_umkodiert + B21.Merkmal_02_umkodiert + B21.Merkmal_03_umkodiert + B21.Merkmal_05_umkodiert + B21.Merkmal_04_umkodiert
+  F11.FristHelp =~ B21.Mittel_01_umkodiert + B21.Mittel_02_umkodiert + B21.Mittel_11_umkodiert + B21.Mittel_13_umkodiert
+  F12.NoAntidepressant =~ B21.Meinung_01_umkodiert + B21.Meinung_02_umkodiert
+  
+  B21.Mittel_10_umkodiert ~~ B21.Mittel_11_umkodiert
+  '
+
+print(model5.2)
+
+model.fit5.2 <- cfa(model = model5.2, data=DL_B21_X, std.lv = TRUE) #std.lv = standardisierte latente Variable: Varianz der Faktoren wird auf 1 festgesetzt
+summary(model.fit5.2, fit.measures = TRUE, standardized=TRUE) 
+# fit.measures=Fit-Indizes: Ausgabe weiterer Modellgütekriterien
+# standardized=TRUE: Standardisierte Lösung, d.h. Parameterschätzungen für den Fall, dass alle latenten und beobachteten Variablen im Modell standardisiert sind (Standardabweichung = 1)
+
+
+##Comparison of both models: Modell4 und Modell5
+lavTestLRT(model.fit4, model.fit5)
